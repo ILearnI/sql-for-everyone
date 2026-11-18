@@ -6,6 +6,8 @@ If this repository helps you, please give it a star so other learners can find i
 > **Nothing to install:** open any **Run** link below and the lesson's queries run in your browser on real PostgreSQL.
 > Prefer your own computer? See [`00_setup`](00_setup).
 
+> **Cheat sheet:** all the syntax from the course on one page: [web version with colours](https://www.codepion.com/exercises/udemy-sql-course/cheat-sheet/) or [in this repository](02_docs/CHEAT_SHEET.md).
+
 ## New here?
 
 Start with the [setup guide](00_setup/README.md). It covers three ways to run the queries: in your browser, with Docker, or with a normal PostgreSQL install.
@@ -15,7 +17,7 @@ Start with the [setup guide](00_setup/README.md). It covers three ways to run th
 ```
 00_setup/       how to run the queries, plus ready-to-use Docker packages for the two databases
 01_datasets/    description of the Brewhouse and Streamly databases, and the CSV files for the import lessons
-02_docs/        the course outline
+02_docs/        the course outline and a SQL cheat sheet
 03_scripts/     one SQL file per lesson, grouped by chapter
 ```
 

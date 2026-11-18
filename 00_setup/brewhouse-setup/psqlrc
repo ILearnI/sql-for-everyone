@@ -1,0 +1,3 @@
+\set QUIET 1
+\set PROMPT2 '%R%x%# '
+\unset QUIET

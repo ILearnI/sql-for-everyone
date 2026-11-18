@@ -1,0 +1,29 @@
+# Streamly practice database for the course "SQL for Everyone: From Zero to Confident" (chapters 14 to 20).
+# Start it:     docker compose up -d --wait
+# Open psql:    docker compose exec db psql
+# Start over:   docker compose down -v      (deletes your changes), then docker compose up -d --wait
+# Run only one practice database at a time (Brewhouse or Streamly): stop the other one first.
+services:
+  db:
+    image: postgres:17
+    environment:
+      POSTGRES_PASSWORD: sqlcourse        # only used inside this container
+      POSTGRES_DB: streamly
+      PGUSER: postgres                    # so that plain "psql" connects without options
+      PGDATABASE: streamly
+      PSQLRC: /etc/course.psqlrc          # the course psql settings (short continuation prompt)
+    volumes:
+      - streamly_data:/var/lib/postgresql/data
+      - ./init:/docker-entrypoint-initdb.d:ro   # loads the Streamly data the first time only
+      - ./psqlrc:/etc/course.psqlrc:ro
+      - ./work:/work                      # your .sql files and contacts_raw.csv
+    # ports:                              # only needed for a graphical client
+    #   - "5432:5432"
+    healthcheck:
+      # Ready = the real server answers on the network AND the last table is fully loaded.
+      test: ["CMD-SHELL", "psql -h 127.0.0.1 -tAc 'SELECT count(*) = 2040 FROM contacts_raw' | grep -q t"]
+      interval: 2s
+      timeout: 3s
+      retries: 60
+volumes:
+  streamly_data:

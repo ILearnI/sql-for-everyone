@@ -1,0 +1,29 @@
+# Brewhouse practice database for the course "SQL for Everyone".
+# Start it:     docker compose up -d --wait
+# Open psql:    docker compose exec db psql
+# Start over:   docker compose down -v      (deletes your changes), then docker compose up -d --wait
+services:
+  db:
+    image: postgres:17
+    environment:
+      POSTGRES_PASSWORD: sqlcourse        # only used inside this container
+      POSTGRES_DB: brewhouse
+      PGUSER: postgres                    # so that plain "psql" connects without options
+      PGDATABASE: brewhouse
+      PSQLRC: /etc/course.psqlrc          # the course psql settings (short continuation prompt)
+    volumes:
+      - brewhouse_data:/var/lib/postgresql/data
+      - ./init:/docker-entrypoint-initdb.d:ro   # loads the Brewhouse data the first time only
+      - ./psqlrc:/etc/course.psqlrc:ro
+      - ./work:/work                      # your .sql files and new_customers.csv
+    # ports:                              # only needed for the optional graphical client lesson
+    #   - "5432:5432"
+    healthcheck:
+      # Ready = the real server answers on the network AND the last table is fully loaded.
+      # (During the first start PostgreSQL runs a temporary server that does not listen on the network.)
+      test: ["CMD-SHELL", "psql -h 127.0.0.1 -tAc 'SELECT count(*) = 200000 FROM events_log' | grep -q t"]
+      interval: 2s
+      timeout: 3s
+      retries: 30
+volumes:
+  brewhouse_data:
